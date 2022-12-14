@@ -55,7 +55,7 @@ const modals = () => {
     });
   }
 
-  const modalTimerId = setTimeout(() => openModal('.popup', modalTimerId), 2000);
+  const modalTimerId = setTimeout(() => openModal('.popup', modalTimerId), 1000000);
 
   bindModals('.header_btn', '.popup_engineer', modalTimerId);
   bindModals('.phone_link', '.popup', modalTimerId);
