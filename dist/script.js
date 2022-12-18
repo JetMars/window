@@ -17966,6 +17966,7 @@ document.addEventListener('DOMContentLoaded', function () {
   Object(_modules_modals__WEBPACK_IMPORTED_MODULE_1__["default"])();
   Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.glazing_slider', '.glazing_block', '.glazing_content', 'active');
   Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.decoration_slider', '.no_click', '.decoration_content>.row>div', 'after_click');
+  Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.balcon_icons', '.balcon_icons_img', '.big_img>img', 'do_image_more', 'inline-block');
   Object(_modules_forms__WEBPACK_IMPORTED_MODULE_3__["default"])();
 });
 
@@ -18054,6 +18055,7 @@ __webpack_require__.r(__webpack_exports__);
 var modals = function modals() {
   function openModal(modalSelector, modalTimerId) {
     var modal = document.querySelector(modalSelector);
+    modal.classList.remove('hide');
     modal.classList.toggle('show');
     var padding = window.innerWidth - document.documentElement.clientWidth;
     document.body.style.overflow = 'hidden';
@@ -18071,22 +18073,36 @@ var modals = function modals() {
     document.body.style.paddingRight = '';
   }
 
-  function bindModals(triggerSelector, popupSelector, modalTimerId) {
+  function bindModals(triggerSelector, popupSelector, buttonClose, modalTimerId) {
+    var closeClickOverlay = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : true;
     var trigger = document.querySelectorAll(triggerSelector);
     var popup = document.querySelector(popupSelector);
-    var triggerClose = popup.querySelector('.popup_close');
+    var triggerClose = popup.querySelector(buttonClose);
+    var modals = document.querySelectorAll('[data-modal]');
     trigger.forEach(function (item) {
       item.addEventListener('click', function (event) {
         event.preventDefault();
+        modals.forEach(function (item) {
+          item.classList.add('hide');
+          item.classList.remove('show');
+          document.body.style.overflow = '';
+          document.body.style.paddingRight = '';
+        });
         openModal(popupSelector, modalTimerId);
       });
     });
     triggerClose.addEventListener('click', function (event) {
       event.preventDefault();
+      modals.forEach(function (item) {
+        item.classList.remove('hide');
+      });
       closeModal(popupSelector);
     });
     popup.addEventListener('click', function (e) {
-      if (e.target === popup) {
+      if (e.target === popup && closeClickOverlay) {
+        modals.forEach(function (item) {
+          item.classList.remove('hide');
+        });
         closeModal(popupSelector);
       }
     });
@@ -18100,8 +18116,11 @@ var modals = function modals() {
   var modalTimerId = setTimeout(function () {
     return openModal('.popup', modalTimerId);
   }, 1000000);
-  bindModals('.header_btn', '.popup_engineer', modalTimerId);
-  bindModals('.phone_link', '.popup', modalTimerId);
+  bindModals('.header_btn', '.popup_engineer', '.popup_close', modalTimerId);
+  bindModals('.phone_link', '.popup', '.popup_close', modalTimerId);
+  bindModals('.popup_calc_btn', '.popup_calc', '.popup_calc_close', modalTimerId);
+  bindModals('.popup_calc_button', '.popup_calc_profile', '.popup_calc_profile_close', modalTimerId, false);
+  bindModals('.popup_calc_profile_button', '.popup_calc_end', '.popup_calc_end_close', modalTimerId, false);
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (modals);
@@ -18125,14 +18144,14 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var tabs = function tabs(parentSelector, tabSelector, contentSelector, activeClass) {
+  var display = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'block';
   var tabs = document.querySelectorAll(tabSelector);
   var content = document.querySelectorAll(contentSelector);
   var tabParent = document.querySelector(parentSelector);
 
   function hideTabContents() {
     content.forEach(function (element) {
-      element.classList.add('hide');
-      element.classList.remove('show');
+      element.style.display = 'none';
     });
     tabs.forEach(function (element) {
       element.classList.remove(activeClass);
@@ -18141,8 +18160,7 @@ var tabs = function tabs(parentSelector, tabSelector, contentSelector, activeCla
 
   function showTabContents() {
     var i = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-    content[i].classList.remove('hide');
-    content[i].classList.add('show');
+    content[i].style.display = display;
     tabs[i].classList.add(activeClass);
   }
 
