@@ -1,14 +1,10 @@
 import postData from '../services/postData';
+import inputNumValid from '../modules/inputNumValid';
 
-const forms = () => {
+const forms = (stateForm) => {
   const forms = document.querySelectorAll('form');
-  const inputsPhone = document.querySelectorAll('input[name="user_phone"]');
 
-  inputsPhone.forEach(input => {
-    input.addEventListener('input', () => {
-      input.value = input.value.replace(/\D/, '');
-    });
-  });
+  inputNumValid('input[name="user_phone"]');
 
   const messageData = {
     loading: 'Загрузка',
@@ -29,6 +25,12 @@ const forms = () => {
 
       const formData = new FormData(form);
 
+      if (e.target.getAttribute('data-end') === 'end') {
+        for (let key in stateForm) {
+          formData.append(key, stateForm[key]);
+        }
+      }
+
       postData('assets/server.php', formData)
         .then(res => {
           console.log(res);
@@ -39,7 +41,9 @@ const forms = () => {
         })
         .finally(() => {
           form.reset();
-          setTimeout(() => message.remove(), 5000);
+          setTimeout(() => {
+            message.remove();
+          }, 3000);
         });
 
     });

@@ -1,30 +1,29 @@
+function closeModal(modalSelector) {
+  const modal = document.querySelector(modalSelector);
+
+  modal.classList.toggle('show');
+
+  document.body.style.overflow = '';
+  document.body.style.paddingRight = '';
+}
+
+function openModal(modalSelector, modalTimerId) {
+  const modal = document.querySelector(modalSelector);
+
+  modal.classList.remove('hide');
+  modal.classList.toggle('show');
+
+
+  const padding = window.innerWidth - document.documentElement.clientWidth;
+  document.body.style.overflow = 'hidden';
+  document.body.style.paddingRight = padding + 'px';
+
+  if (modalTimerId) {
+    clearTimeout(modalTimerId);
+  }
+}
+
 const modals = () => {
-
-  function openModal(modalSelector, modalTimerId) {
-    const modal = document.querySelector(modalSelector);
-
-    modal.classList.remove('hide');
-    modal.classList.toggle('show');
-
-
-    const padding = window.innerWidth - document.documentElement.clientWidth;
-    document.body.style.overflow = 'hidden';
-    document.body.style.paddingRight = padding + 'px';
-
-    if (modalTimerId) {
-      clearTimeout(modalTimerId);
-    }
-  }
-
-  function closeModal(modalSelector) {
-    const modal = document.querySelector(modalSelector);
-
-    modal.classList.toggle('show');
-
-    document.body.style.overflow = '';
-    document.body.style.paddingRight = '';
-  }
-
 
   function bindModals(triggerSelector, popupSelector, buttonClose, modalTimerId, closeClickOverlay = true) {
 
@@ -89,4 +88,4 @@ const modals = () => {
   bindModals('.popup_calc_profile_button', '.popup_calc_end', '.popup_calc_end_close', modalTimerId, false);
 };
 
-export default modals;
+export { modals, closeModal, openModal };
